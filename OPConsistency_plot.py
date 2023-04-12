@@ -1,0 +1,21 @@
+from OPConsistency_db import OPConsistency
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+class Plot(OPConsistency):
+    def __init__(self, DB_PATH, DB_PASSWORD, hue, filters={}, Adate='1900-01-01', Adate2='2025-01-01', error=0):
+        super().__init__(DB_PATH, DB_PASSWORD, hue, filters, Adate, Adate2, error)
+
+    def hist(self,x='Diff (%)',combined=0): # plot histogram
+        self.df = self.mkdf().reset_index(drop=True)
+        if combined:
+            sns.histplot(self.df, x=x, hue=self.hue)
+            plt.show()
+        else:
+            for legend in self.filters[self.hue]:
+                print(legend)
+                legend_df = self.df[self.df[self.hue].astype(str) == legend]
+                print(legend_df)
+                # plot histogram of % difference
+                sns.histplot(data=legend_df, x=x, hue=self.hue)
+                plt.show()

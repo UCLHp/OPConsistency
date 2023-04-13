@@ -196,7 +196,7 @@ class GUI(Plot):
                 pig.grid(row=1, column=0)
                 self.oink_text = Label(self.frame_dict[col], text='', background='#f2e6ff')
                 self.oink_text.grid(row=2, column=0)
-        #
+
         # set initial states of checkbuttons
         for self.check_list in self.check_dict.values():
             for check in self.check_list:

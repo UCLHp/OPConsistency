@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkcalendar import Calendar
 import pypyodbc
+from PIL import Image, ImageTk
 from OPConsistency_plot import Plot
 
 class GUI(Plot):
@@ -94,11 +95,15 @@ class GUI(Plot):
     def _close_window(self, root): # for closing the app when the GUI window is closed
         root.destroy()
         root.quit()
+    
+    def _pig(self): # cuz I like it ;)
+        self.oink_text.config(text='Oink! Oink!')
+        self.frame_dict['pig'].after(2000, lambda: self.oink_text.config(text=''))
                     
     
     def GUI(self): # the method called in OPConsistency_main to deal with the GUI and everything else
-        order = ['Energy', 'MachineName', 'GA', 'Electrometer', 'Chamber', 'Adate', '']
-        self.alias = {'': '', 'Energy': 'Energy', 'MachineName': 'Gantry', 'GA': 'Gantry angle', 'Electrometer': 'Electrometer', 'Chamber': 'Chamber', 'Adate': 'Date'}
+        order = ['Energy', 'MachineName', 'GA', 'Electrometer', 'Chamber', 'Adate', '', 'pig']
+        self.alias = {'': '', 'Energy': 'Energy', 'MachineName': 'Gantry', 'GA': 'Gantry angle', 'Electrometer': 'Electrometer', 'Chamber': 'Chamber', 'Adate': 'Date', 'pig': 'Piggy'}
         B = ['Energy']
 
         # Creating root window
@@ -108,20 +113,15 @@ class GUI(Plot):
         
         # Creating a frame for each section
         self.frame_dict={}
+        style = ttk.Style()
+        style.map('Custom.TLabelframe', background=[('active', '#f2e6ff'), ('!active', '#f2e6ff')])
         for col in order:
-            self.frame_dict[col] = ttk.LabelFrame(root, text=self.alias[col])
+            self.frame_dict[col] = ttk.LabelFrame(root, text=self.alias[col], style='Custom.TLabelframe')
         
         # Packing the frames in a grid layout
         i = 0
         for i in range(len(order)):
-            if order[i] == 'Energy':
-                self.frame_dict[order[i]].grid(row=0, column=0, padx=10, pady=10, columnspan=2)
-            elif order[i] == 'Adate':
-                self.frame_dict[order[i]].grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-            elif order[i] == '':
-                self.frame_dict[order[i]].grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-            else:
-                self.frame_dict[order[i]].grid(row=i%2+2, column=i//2, padx=10, pady=10, sticky="nsew")
+            self.frame_dict[order[i]].grid(row=i//2, column=i%2, padx=10, pady=10, sticky="nsew")
         
         #
         # Make option_dict here with first element the label and then suboptions
@@ -131,7 +131,7 @@ class GUI(Plot):
         self.check_dict = {}
         for col in order:
             
-            if col not in ['', 'Adate']:
+            if col not in ['', 'Adate', 'pig']:
                 sql = '''
                     SELECT DISTINCT {}
                     FROM {}
@@ -149,7 +149,7 @@ class GUI(Plot):
                 self.check_dict[col][0].configure(command=lambda c=col: self._toggle_suboptions(c, 0))
                 
             elif not col: # hue and plot
-                hue_label = Label(self.frame_dict[col], text='Hue')
+                hue_label = Label(self.frame_dict[col], text='Hue', background='#f2e6ff')
                 hue_label.grid(row=0, column=0)
                 hue_list = []
                 for col2 in order:
@@ -157,7 +157,7 @@ class GUI(Plot):
                 self.hue_combobox = ttk.Combobox(self.frame_dict[col], values=hue_list, state='readonly')
                 self.hue_combobox.grid(row=1, column=0)
             
-                blank = Label(self.frame_dict[col], text='')
+                blank = Label(self.frame_dict[col], text='', background='#f2e6ff')
                 blank.grid(row=2, column=0)
             
                 # default select hue checkbox
@@ -172,21 +172,31 @@ class GUI(Plot):
                 self.plot_button = ttk.Button(self.frame_dict[col], text='🐖 Plot 🐖', command= self._plot)
                 self.plot_button.grid(row=4, column=0)
                 
-            else: # Adate
+            elif col == 'Adate': # Adate
                 Adate_datetext = ['1900-01-01', '2025-01-01']
                 Adate_button = ['Start Date', 'End Date']
-                Adate_datetext[0] = Label(self.frame_dict[col], text=Adate_datetext[0])
+                Adate_datetext[0] = Label(self.frame_dict[col], text=Adate_datetext[0], background='#f2e6ff')
                 Adate_datetext[0].grid(row=0, column=0)
                 Adate_button[0] = ttk.Button(self.frame_dict[col], text=Adate_button[0], command=lambda: self._calendar(0, Adate_datetext))
                 Adate_button[0].grid(row=1, column=0)
-                blank = Label(self.frame_dict[col], text='')
+                blank = Label(self.frame_dict[col], text='', background='#f2e6ff')
                 blank.grid(row=2, column=0)
-                Adate_datetext[1] = Label(self.frame_dict[col], text=Adate_datetext[1])
+                Adate_datetext[1] = Label(self.frame_dict[col], text=Adate_datetext[1], background='#f2e6ff')
                 Adate_datetext[1].grid(row=3, column=0)
                 Adate_button[1] = ttk.Button(self.frame_dict[col], text=Adate_button[1], command=lambda: self._calendar(1, Adate_datetext))
                 Adate_button[1].grid(row=4, column=0)
                 
-        
+            else:
+                pig_label = Label(self.frame_dict[col], text='Oink! Click me!', background='#f2e6ff')
+                pig_label.grid(row=0, column=0)
+                img = Image.open("pig.png")
+                img = img.resize((50, 50))
+                icon = ImageTk.PhotoImage(img)
+                pig = Button(self.frame_dict[col], image=icon, command=self._pig)
+                pig.grid(row=1, column=0)
+                self.oink_text = Label(self.frame_dict[col], text='', background='#f2e6ff')
+                self.oink_text.grid(row=2, column=0)
+        #
         # set initial states of checkbuttons
         for self.check_list in self.check_dict.values():
             for check in self.check_list:
@@ -194,4 +204,5 @@ class GUI(Plot):
         
         # Running the main loop
         root.protocol("WM_DELETE_WINDOW", lambda: self._close_window(root))
+        root.configure(bg='#C8A2C8')
         root.mainloop()

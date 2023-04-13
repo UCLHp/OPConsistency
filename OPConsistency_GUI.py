@@ -52,6 +52,7 @@ class GUI(Plot):
         root.withdraw() # keep the root window from appearing
 
         top = Toplevel(root)
+        top.iconbitmap("pig.ico")
         top.protocol("WM_DELETE_WINDOW", lambda: cal_done(1))
 
         cal = Calendar(top,
@@ -75,14 +76,20 @@ class GUI(Plot):
             
     def _plot(self): # preparing parameters for the plot
         self.hue = self.hue_combobox.get()
-        for col in self.option_dict:
-            if self.var_dict[col][0].get():
-                print(col)
-                print([self.var_dict[col][i].get() for i in range(len(self.var_dict[col]))])
-                self.filters[self.alias[col]]=[]
-                for i in range(len(self.option_dict[col][1:])):
-                    if self.var_dict[col][i+1].get(): self.filters[self.alias[col]] += self.option_dict[col][i+1]
-        self.hist(combined=1 if self.combined_checkbox.instate(['selected']) else 0)
+        if self.hue:
+            plot = 1
+            for col in self.option_dict:
+                if self.var_dict[col][0].get():
+                    if all(i.get() == 0 for i in self.var_dict[col][1:]):
+                        plot = 0
+                        messagebox.showwarning("Oink!", "A filter is selected but nothing is included. To include all elements in the filter, just deselect the filter.")
+                    else:
+                        self.filters[self.alias[col]]=[]
+                        for i in range(len(self.option_dict[col][1:])):
+                            if self.var_dict[col][i+1].get(): self.filters[self.alias[col]] += self.option_dict[col][i+1]
+            if plot: self.hist(combined=1 if self.combined_checkbox.instate(['selected']) else 0)
+        else:
+            messagebox.showwarning("Oink!", "The hue is not selected")
     
     def _close_window(self, root): # for closing the app when the GUI window is closed
         root.destroy()
@@ -96,6 +103,8 @@ class GUI(Plot):
 
         # Creating root window
         root = Tk()
+        root.title('🐷🐖🐽 Oinkput Consistency Plot GUI 🐽🐖🐷')
+        root.iconbitmap("pig.ico")
         
         # Creating a frame for each section
         self.frame_dict={}
@@ -160,7 +169,7 @@ class GUI(Plot):
                 self.combined_checkbox.grid(row=3, column=0)
             
                 # plot button
-                self.plot_button = ttk.Button(self.frame_dict[col], text='Plot', command= self._plot)
+                self.plot_button = ttk.Button(self.frame_dict[col], text='🐖 Plot 🐖', command= self._plot)
                 self.plot_button.grid(row=4, column=0)
                 
             else: # Adate

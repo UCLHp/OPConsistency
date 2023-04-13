@@ -114,14 +114,7 @@ class GUI(Plot):
         # Packing the frames in a grid layout
         i = 0
         for i in range(len(order)):
-            if order[i] == 'Energy':
-                self.frame_dict[order[i]].grid(row=0, column=0, padx=10, pady=10, columnspan=2)
-            elif order[i] == 'Adate':
-                self.frame_dict[order[i]].grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-            elif order[i] == '':
-                self.frame_dict[order[i]].grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-            else:
-                self.frame_dict[order[i]].grid(row=i%2+2, column=i//2, padx=10, pady=10, sticky="nsew")
+            self.frame_dict[order[i]].grid(row=i//2, column=i%2, padx=10, pady=10, sticky="nsew")
         
         #
         # Make option_dict here with first element the label and then suboptions

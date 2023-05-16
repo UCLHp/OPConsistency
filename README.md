@@ -10,3 +10,5 @@ OPConsistency consists of multiple modules that work together to create an appli
 4. OPConsistency_main module: This is the main entry point of the OPConsistency application. It imports the GUI class from OPConsistency_GUI. The DB_PATH and DB_PASSWORD variables are set to the path of the Microsoft Access database file and the corresponding password. An instance of the GUI class is created, and the GUI method is called to display the GUI and allow user interaction.
 
 Overall, the code enables users to interact with a GUI to select filters, specify date ranges, and generate histograms based on the data extracted from a Microsoft Access database. The application provides a visual representation of the data for analysis and exploration.
+
+Note: Never press the 'Kill the piggy' button or else...

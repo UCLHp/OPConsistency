@@ -76,6 +76,7 @@ class GUI(Plot):
             suboption.configure(state=NORMAL) if state else suboption.configure(state=DISABLED)
             
     def _plot(self): # preparing parameters for the plot
+        self.filters = {}
         self.hue = self.hue_combobox.get()
         if self.hue:
             plot = 1

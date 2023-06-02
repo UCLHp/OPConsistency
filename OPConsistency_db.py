@@ -20,6 +20,22 @@ class OPConsistency:
     
 
     def _ref_to_df(self):
+        # Create empty list to store conditions
+        conditions = []
+
+        # Add condition for gantry
+        if 'Gantry' in self.filters:
+            gantry_condition = "A.[Machine Name] IN ({})".format(", ".join("'%s'" % g for g in self.filters['Gantry']))
+            conditions.append(gantry_condition)
+        
+        if 'Energy' in self.filters:
+            energy_condition = "A.[Energy] IN ({})".format(", ".join(str(e) for e in self.filters['Energy']))
+            conditions.append(energy_condition)
+        
+        # Combine all conditions into a single WHERE clause
+        where_clause = " AND ".join(conditions)
+        print(where_clause)
+        
         '''pull reference data from database and return dataframe'''
         sql =   '''
                 Select A.Energy
@@ -34,7 +50,10 @@ class OPConsistency:
                 On A.Energy = B.Energy
                 And A.[Machine Name] = B.[Machine Name]
                 And A.RefDate = B.MRefDate
-            '''
+                {0}
+            '''.format("WHERE " + where_clause if where_clause else "")
+        
+        print(sql)
         try:
             conn = self._connect_to_db()
             cursor = conn.cursor()
@@ -48,7 +67,8 @@ class OPConsistency:
             records = cursor.fetchall()
             cursor.close()
             conn.commit()
-        except:
+        except Exception as e:
+            print(str(e))
             cursor.close()
             conn = None # close database connection
             self.error='Ref_error'
@@ -57,6 +77,7 @@ class OPConsistency:
         # convert reference data to pandas dataframe
         cols = ['Energy','RefGy']
         df_ref = pd.DataFrame(list(records), columns=cols)
+        print(df_ref)
         return df_ref
     
 

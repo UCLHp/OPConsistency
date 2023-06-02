@@ -75,7 +75,7 @@ class GUI(Plot):
         for suboption in self.check_dict[col][1:]:
             suboption.configure(state=NORMAL) if state else suboption.configure(state=DISABLED)
             
-    def _plot(self): # preparing parameters for the plot
+    def _plot(self, hist): # preparing parameters for the plot
         self.filters = {}
         self.hue = self.hue_combobox.get()
         if self.hue:
@@ -89,7 +89,7 @@ class GUI(Plot):
                         self.filters[self.alias[col]]=[]
                         for i in range(len(self.option_dict[col][1:])):
                             if self.var_dict[col][i+1].get(): self.filters[self.alias[col]] += self.option_dict[col][i+1]
-            if plot: self.hist(combined=1 if self.combined_checkbox.instate(['selected']) else 0)
+            if plot: self.plot(hist=hist, combined=1 if self.combined_checkbox.instate(['selected']) else 0)
         else:
             messagebox.showwarning("Oink!", "The hue is not selected")
     
@@ -169,9 +169,17 @@ class GUI(Plot):
                 self.combined_checkbox.state(['!alternate'])
                 self.combined_checkbox.grid(row=3, column=0)
             
-                # plot button
-                self.plot_button = ttk.Button(self.frame_dict[col], text='🐖 Plot 🐖', command= self._plot)
-                self.plot_button.grid(row=4, column=0)
+                # create a frame for the plot buttons
+                plot_frame = ttk.Frame(self.frame_dict[col])
+                plot_frame.grid(row=4, column=0)
+                
+                # create two plot buttons inside the frame
+                plot_button1 = ttk.Button(plot_frame, text="🐖 Plot Histogram 🐖", command=lambda: self._plot(1))
+                plot_button2 = ttk.Button(plot_frame, text="🐷 Plot Time Series 🐷", command=lambda: self._plot(0))
+                
+                # use grid or pack to place the buttons next to each other
+                plot_button1.grid(row=0, column=0)
+                plot_button2.grid(row=0, column=1)
                 
             elif col == 'Adate': # Adate
                 Adate_datetext = ['1900-01-01', '2025-01-01']

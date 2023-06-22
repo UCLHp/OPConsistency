@@ -25,7 +25,7 @@ class OPConsistency:
 
         # Add condition for gantry
         if 'Gantry' in self.filters:
-            gantry_condition = "A.[Machine Name] IN ({})".format(", ".join("'%s'" % g for g in self.filters['Gantry']))
+            gantry_condition = "A.[MachineName] IN ({})".format(", ".join("'%s'" % g for g in self.filters['Gantry']))
             conditions.append(gantry_condition)
         
         if 'Energy' in self.filters:
@@ -43,12 +43,12 @@ class OPConsistency:
                 From OutputConsRef As A
                 Inner Join (
                     Select Energy
-                        , [Machine Name]
+                        , [MachineName]
                         , Max(RefDate) As MRefDate
                     From OutputConsRef
-                    Group By Energy, [Machine Name]) As B
+                    Group By Energy, [MachineName]) As B
                 On A.Energy = B.Energy
-                And A.[Machine Name] = B.[Machine Name]
+                And A.[MachineName] = B.[MachineName]
                 And A.RefDate = B.MRefDate
                 {0}
             '''.format("WHERE " + where_clause if where_clause else "")
@@ -190,9 +190,9 @@ class OPConsistency:
         return df
     
     def mkdf(self): # the method called in OPConsistency_plot
-        if self.error: return self.error
         df_ref = self._ref_to_df()
         df = self._data_to_df()
+        if self.error: return self.error
         
         # join reference dataframe to outputs dataframe
         try:

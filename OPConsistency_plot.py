@@ -8,6 +8,15 @@ import numpy as np
 class Plot(OPConsistency):
     def __init__(self, DB_PATH, DB_PASSWORD, hue, filters={}, Adate='1900-01-01', Adate2='2025-01-01', error=0):
         super().__init__(DB_PATH, DB_PASSWORD, hue, filters, Adate, Adate2, error)
+    
+    def _warning_cond(self, df, scatter, line): # set warning conditions
+        warning_df = pd.DataFrame(columns=df.columns)
+        
+        return warning_df
+    
+    def _warning_plot(self, df, scatter, line): # plot warning
+        if scatter:
+            pass
 
     def plot(self,x='Diff (%)',combined=0, hist=1):
         self.df = self.mkdf().reset_index(drop=True)
@@ -29,14 +38,6 @@ class Plot(OPConsistency):
                 fig, ax = plt.subplots()
                 sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue, alpha=0.2)
                 sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
-                
-                # if scatter triggered the warning then mark it as red and set variable
-                
-                
-                # similarly for line (avg of points)
-                
-                # finally count total amounts of warnings triggered and labels[-1] to -i = ''
-                
                 plt.show()
 
                 sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
@@ -57,6 +58,9 @@ class Plot(OPConsistency):
                     frequencies = np.fft.rfftfreq(len(averaged_df), 1 / sampling_rate)
                     # Plot the FFT result
                     plt.plot(frequencies, np.abs(fft_result), label=legend)
+                plt.xlabel('Frequency')
+                plt.ylabel('Amplitude')
+                plt.title('FFT Analysis')
                 plt.legend()
                 plt.show()
 

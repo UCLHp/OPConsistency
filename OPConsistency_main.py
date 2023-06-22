@@ -13,7 +13,9 @@ extracted data from database to a pandas dataframe.
 '''
 
 
-DB_PATH = "O:\protons\Work in Progress\Marcus\Asset_QA_Database\PracticAssetsDatabaseFeb23_be.accdb"
-DB_PASSWORD = "Pr0ton5%"
+# DB_PATH = "O:\protons\Work in Progress\Marcus\Asset_QA_Database\PracticAssetsDatabaseFeb23_be.accdb"
+DB_PATH = r"\\9.40.120.20\\rtassetBE\AssetsDatabase_be.accdb"
+# DB_PASSWORD = "Pr0ton5%"
+DB_PASSWORD = "JoNiSi"
 G = GUI(DB_PATH, DB_PASSWORD)
 G.GUI()

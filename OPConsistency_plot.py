@@ -24,9 +24,17 @@ class Plot(OPConsistency):
     def plot(self,x='Diff (%)',combined=0, hist=1):
         self.df = self.mkdf().reset_index(drop=True)
         self.df['Date'] = pd.to_datetime(self.df['Date'])
+        title = '\n'
+        for key, value in self.filters.items():
+            title += f"{key}: {', '.join(value)}\n"
+        title += 'From {} to {}\n'.format(self.Adate, self.Adate2)
         if hist: # plot histogram
             if combined:
+                fig, ax = plt.subplots()
                 sns.histplot(self.df, x=x, hue=self.hue)
+                ax.set_title(title, wrap=True)
+                sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                plt.tight_layout()
                 plt.savefig('{}_hist.png'.format(', '.join(self.filters[self.hue])))
                 plt.show()
                 plt.close()
@@ -36,7 +44,11 @@ class Plot(OPConsistency):
                     legend_df = self.df[self.df[self.hue].astype(str) == legend]
                     print(legend_df)
                     # plot histogram of % difference
+                    fig, ax = plt.subplots()
                     sns.histplot(data=legend_df, x=x, hue=self.hue)
+                    ax.set_title(title, wrap=True)
+                    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                    plt.tight_layout()
                     plt.savefig('{}_hist.png'.format(legend))
                     plt.show()
                     plt.close()
@@ -45,20 +57,32 @@ class Plot(OPConsistency):
                 fig, ax = plt.subplots()
                 sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue, alpha=0.2)
                 sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                ax.set_title(title, wrap=True)
+                sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                plt.tight_layout()
                 plt.savefig('{}_combined.png'.format(', '.join(self.filters[self.hue])))
                 plt.show()
                 plt.close()
 
+                fig, ax = plt.subplots()
                 sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                ax.set_title(title, wrap=True)
+                sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                plt.tight_layout()
                 plt.savefig('{}_scatter.png'.format(', '.join(self.filters[self.hue])))
                 plt.show()
                 plt.close()
+                fig, ax = plt.subplots()
                 sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                ax.set_title(title, wrap=True)
+                sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                plt.tight_layout()
                 plt.savefig('{}_line.png'.format(', '.join(self.filters[self.hue])))
                 plt.show()
                 plt.close()
                 
                 # Prepare for FFT plot
+                fig, ax = plt.subplots()
                 for legend in self.filters[self.hue]:
                     legend_df = self.df[self.df[self.hue].astype(str) == legend]
                     # Perform FFT on the data
@@ -75,6 +99,10 @@ class Plot(OPConsistency):
                 plt.ylabel('Amplitude')
                 plt.title('FFT Analysis')
                 plt.legend()
+                ax.set_title(title, wrap=True)
+                plt.subplots_adjust(right=0.25)
+                plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1))
+                plt.tight_layout()
                 plt.savefig('{}_FFT.png'.format(', '.join(self.filters[self.hue])))
                 plt.show()
                 plt.close()
@@ -83,16 +111,28 @@ class Plot(OPConsistency):
                 for legend in self.filters[self.hue]:
                     legend_df = self.df[self.df[self.hue].astype(str) == legend]
                     # plot lineplot
+                    fig, ax = plt.subplots()
                     sns.scatterplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue, alpha=0.2)
                     sns.lineplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue)
+                    ax.set_title(title, wrap=True)
+                    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                    plt.tight_layout()
                     plt.savefig('{}_combined.png'.format(legend))
                     plt.show()
                     plt.close()
+                    fig, ax = plt.subplots()
                     sns.scatterplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue)
+                    ax.set_title(title, wrap=True)
+                    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                    plt.tight_layout()
                     plt.savefig('{}_scatter.png'.format(legend))
                     plt.show()
                     plt.close()
+                    fig, ax = plt.subplots()
                     sns.lineplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue)
+                    ax.set_title(title, wrap=True)
+                    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+                    plt.tight_layout()
                     plt.savefig('{}_line.png'.format(legend))
                     plt.show()
                     plt.close()
@@ -107,11 +147,16 @@ class Plot(OPConsistency):
                     frequencies = np.fft.rfftfreq(len(averaged_df), 1 / sampling_rate)
                     
                     # Plot the FFT result
+                    fig, ax = plt.subplots()
                     plt.plot(frequencies, np.abs(fft_result), label=legend)
                     plt.xlabel('Frequency')
                     plt.ylabel('Amplitude')
                     plt.title('FFT Analysis')
                     plt.legend()
+                    ax.set_title(title, wrap=True)
+                    plt.subplots_adjust(right=0.25)
+                    plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1))
+                    plt.tight_layout()
                     plt.savefig('{}_FFT.png'.format(legend))
                     plt.show()
                     plt.close()

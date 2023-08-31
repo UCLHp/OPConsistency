@@ -90,7 +90,7 @@ class GUI(Plot):
                         self.filters[self.alias[col]]=[]
                         for i in range(len(self.option_dict[col][1:])):
                             if self.var_dict[col][i+1].get(): self.filters[self.alias[col]] += self.option_dict[col][i+1]
-            if plot: self.plot(hist=hist, combined=1 if self.combined_checkbox.instate(['selected']) else 0)
+            if plot: self.plot(hist=hist, combined=1 if self.combined_checkbox.instate(['selected']) else 0, save=1 if self.save_checkbox.instate(['selected']) else 0)
         else:
             messagebox.showwarning("Oink!", "The hue is not selected")
     
@@ -169,10 +169,15 @@ class GUI(Plot):
                 self.combined_checkbox = ttk.Checkbutton(self.frame_dict[col], text='Combine all plots onto the same axis')
                 self.combined_checkbox.state(['!alternate'])
                 self.combined_checkbox.grid(row=3, column=0)
+                
+                # save plots checkbutton
+                self.save_checkbox = ttk.Checkbutton(self.frame_dict[col], text='Save plots')
+                self.save_checkbox.state(['!alternate'])
+                self.save_checkbox.grid(row=4, column=0)
             
                 # create a frame for the plot buttons
                 plot_frame = ttk.Frame(self.frame_dict[col])
-                plot_frame.grid(row=4, column=0)
+                plot_frame.grid(row=5, column=0)
                 
                 # create two plot buttons inside the frame
                 plot_button1 = ttk.Button(plot_frame, text="🐖 Plot Histogram 🐖", command=lambda: self._plot(1))

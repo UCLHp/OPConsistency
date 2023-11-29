@@ -111,7 +111,7 @@ class GUI(Plot):
         # Creating root window
         root = Tk()
         root.title('🐷🐖🐽 Oinkput Consistency Plot GUI 🐽🐖🐷')
-        root.iconbitmap("pig.ico")
+        root.iconbitmap("O:\protons\Work in Progress\Marcus\OPConsistency\pig.ico")
         
         # Creating a frame for each section
         self.frame_dict={}
@@ -205,7 +205,7 @@ class GUI(Plot):
                 try:
                     pig_label = Label(self.frame_dict[col], text='Oink! Click me!', background='#f2e6ff')
                     pig_label.grid(row=0, column=0)
-                    img = Image.open("pig.png")
+                    img = Image.open("O:\protons\Work in Progress\Marcus\OPConsistency\pig.png")
                     img = img.resize((50, 50))
                     icon = ImageTk.PhotoImage(img)
                     pig = Button(self.frame_dict[col], image=icon, command=lambda: messagebox.showinfo(title='Oink!!!', message='Oink! Oink!'))

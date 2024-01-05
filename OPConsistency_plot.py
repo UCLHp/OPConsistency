@@ -13,15 +13,6 @@ class Plot(OPConsistency):
     def __init__(self, DB_PATH, DB_PASSWORD, hue, filters={}, Adate='1900-01-01', Adate2='2025-01-01', error=0):
         super().__init__(DB_PATH, DB_PASSWORD, hue, filters, Adate, Adate2, error)
     
-    def _warning_cond(self, df, scatter, line): # set warning conditions
-        warning_df = pd.DataFrame(columns=df.columns)
-        
-        return warning_df
-    
-    def _warning_plot(self, df, scatter, line): # plot warning
-        if scatter:
-            pass
-    
     def _show_plot(self, fig):
         # Create a root window and hide it
         root = tk.Tk()
@@ -84,6 +75,16 @@ class Plot(OPConsistency):
                     plt.show()
                     plt.close()
         else: # plot time series
+        
+            self.warning_df = self.df[((self.df['Diff (%)'] >= 0.5) & (self.df['Diff (%)'] < 2)) | ((self.df['Diff (%)'] <= -0.5) & (self.df['Diff (%)'] > -2))]
+            self.fail_df = self.df[(self.df['Diff (%)'] >= 2) | (self.df['Diff (%)'] <= -2)]
+            if not self.warning_df.empty:
+                print('\nwarning:\n')
+                print(self.warning_df)
+            if not self.fail_df.empty:
+                print('\nfail:\n')
+                print(self.fail_df)
+        
             if combined:
                 # fig, ax = plt.subplots()
                 # sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue, alpha=0.2)
@@ -98,6 +99,12 @@ class Plot(OPConsistency):
 
                 fig, ax = plt.subplots()
                 sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                ax.axhline(0.5, color='y')
+                ax.axhline(-0.5, color='y')
+                if (self.df['Diff (%)'] >= 1.8).any():
+                    ax.axhline(2, color='r')
+                if (self.df['Diff (%)'] <= -1.8).any():
+                    ax.axhline(-2, color='r')
                 ax.set_title(title, wrap=True)
                 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
                 plt.tight_layout()
@@ -107,6 +114,12 @@ class Plot(OPConsistency):
                 plt.close()
                 fig, ax = plt.subplots()
                 sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                ax.axhline(0.5, color='y')
+                ax.axhline(-0.5, color='y')
+                if (self.df['Diff (%)'] >= 1.8).any():
+                    ax.axhline(2, color='r')
+                if (self.df['Diff (%)'] <= -1.8).any():
+                    ax.axhline(-2, color='r')
                 ax.set_title(title, wrap=True)
                 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
                 plt.tight_layout()
@@ -156,8 +169,15 @@ class Plot(OPConsistency):
                     # self._show_plot(fig=fig)
                     # plt.show()
                     # plt.close()
+                    
                     fig, ax = plt.subplots()
                     sns.scatterplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue)
+                    ax.axhline(0.5, color='y')
+                    ax.axhline(-0.5, color='y')
+                    if (legend_df['Diff (%)'] >= 1.8).any():
+                        ax.axhline(2, color='r')
+                    if (legend_df['Diff (%)'] <= -1.8).any():
+                        ax.axhline(-2, color='r')
                     ax.set_title(title, wrap=True)
                     sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
                     plt.tight_layout()
@@ -167,6 +187,12 @@ class Plot(OPConsistency):
                     plt.close()
                     fig, ax = plt.subplots()
                     sns.lineplot(data=legend_df, x='Date', y='Diff (%)', hue=self.hue)
+                    ax.axhline(0.5, color='y')
+                    ax.axhline(-0.5, color='y')
+                    if (legend_df['Diff (%)'] >= 1.8).any():
+                        ax.axhline(2, color='r')
+                    if (legend_df['Diff (%)'] <= -1.8).any():
+                        ax.axhline(-2, color='r')
                     ax.set_title(title, wrap=True)
                     sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
                     plt.tight_layout()

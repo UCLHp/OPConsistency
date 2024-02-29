@@ -84,7 +84,9 @@ class Plot(OPConsistency):
             if not self.fail_df.empty:
                 print('\nfail:\n')
                 print(self.fail_df)
-        
+            
+            palette = sns.hls_palette(n_colors=len(self.df['Energy'].unique()), l=.5, s=1)
+            
             if combined:
                 # fig, ax = plt.subplots()
                 # sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue, alpha=0.2)
@@ -96,9 +98,10 @@ class Plot(OPConsistency):
                 # self._show_plot(fig=fig)
                 # plt.show()
                 # plt.close()
+            
 
                 fig, ax = plt.subplots()
-                sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                sns.scatterplot(self.df, x='Date', y='Diff (%)', hue=self.hue, palette=palette)
                 ax.axhline(0.5, color='y')
                 ax.axhline(-0.5, color='y')
                 if (self.df['Diff (%)'] >= 1.8).any():
@@ -113,7 +116,7 @@ class Plot(OPConsistency):
                 plt.show()
                 plt.close()
                 fig, ax = plt.subplots()
-                sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue)
+                sns.lineplot(self.df, x='Date', y='Diff (%)', hue=self.hue, palette=palette)
                 ax.axhline(0.5, color='y')
                 ax.axhline(-0.5, color='y')
                 if (self.df['Diff (%)'] >= 1.8).any():

@@ -111,7 +111,7 @@ class GUI(Plot):
         # Creating root window
         root = Tk()
         root.title('🐷🐖🐽 Oinkput Consistency Plot GUI 🐽🐖🐷')
-        root.iconbitmap("O:\protons\Work in Progress\Marcus\OPConsistency\pig.ico")
+        #root.iconbitmap("O:\protons\Work in Progress\Marcus\OPConsistency\pig.ico")
         
         # Creating a frame for each section
         self.frame_dict={}
@@ -201,20 +201,20 @@ class GUI(Plot):
                 Adate_button[1] = ttk.Button(self.frame_dict[col], text=Adate_button[1], command=lambda: self._calendar(1, Adate_datetext))
                 Adate_button[1].grid(row=4, column=0)
                 
-            else: # piggy!!!
-                try:
-                    pig_label = Label(self.frame_dict[col], text='Oink! Click me!', background='#f2e6ff')
-                    pig_label.grid(row=0, column=0)
-                    img = Image.open("O:\protons\Work in Progress\Marcus\OPConsistency\pig.png")
-                    img = img.resize((50, 50))
-                    icon = ImageTk.PhotoImage(img)
-                    pig = Button(self.frame_dict[col], image=icon, command=lambda: messagebox.showinfo(title='Oink!!!', message='Oink! Oink!'))
-                    pig.grid(row=1, column=0)
-                    evil = Button(self.frame_dict[col], text='Kill the piggy', command=lambda: messagebox.showerror(title='Curse You!!!', message='HOW DARE YOOOOOUUUUUUUU!!!!!!!!\nお前はもう死んでいる'))
-                    evil.grid(row=2, column=0)
-                except:
-                    nooink_text = Label(self.frame_dict[col], text='No piggy...', background='#f2e6ff')
-                    nooink_text.grid(row=0, column=0)
+            # else: # piggy!!!
+            #     try:
+            #         pig_label = Label(self.frame_dict[col], text='Oink! Click me!', background='#f2e6ff')
+            #         pig_label.grid(row=0, column=0)
+            #         img = Image.open("O:\protons\Work in Progress\Marcus\OPConsistency\pig.png")
+            #         img = img.resize((50, 50))
+            #         icon = ImageTk.PhotoImage(img)
+            #         pig = Button(self.frame_dict[col], image=icon, command=lambda: messagebox.showinfo(title='Oink!!!', message='Oink! Oink!'))
+            #         pig.grid(row=1, column=0)
+            #         evil = Button(self.frame_dict[col], text='Kill the piggy', command=lambda: messagebox.showerror(title='Curse You!!!', message='HOW DARE YOOOOOUUUUUUUU!!!!!!!!\nお前はもう死んでいる'))
+            #         evil.grid(row=2, column=0)
+            #     except:
+            #         nooink_text = Label(self.frame_dict[col], text='No piggy...', background='#f2e6ff')
+            #         nooink_text.grid(row=0, column=0)
 
         # set initial states of checkbuttons
         for self.check_list in self.check_dict.values():
